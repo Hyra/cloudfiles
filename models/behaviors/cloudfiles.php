@@ -37,6 +37,10 @@ class CloudfilesBehavior extends ModelBehavior {
 			'rule' => array('checkFileExt'),
 			'message' => 'Invalid file extension'
 		),
+		'UploadError' => array(
+			'rule' => array('checkUploadError'),
+			'message' => 'Upload failed'
+		),
 	);
 
 	/**
@@ -70,6 +74,7 @@ class CloudfilesBehavior extends ModelBehavior {
 	 * @return bool
 	 */
 	function beforeValidate(&$model) {
+		$model->validate[$this->_field]['CloudFiles.UploadError'] = $this->validations['UploadError'];
 		if (isset($this->settings[$this->_field]['allowedExt'])) {
 			$model->validate[$this->_field]['InvalidExt'] = $this->validations['InvalidExt'];
 		}
@@ -84,6 +89,11 @@ class CloudfilesBehavior extends ModelBehavior {
 	function beforeSave(&$model) {
 		$data = $model->data[$model->alias][$this->_field];
 		$settings = $this->settings[$this->_field];
+
+		if ($model->id !== false && $data['error'] === UPLOAD_ERR_NO_FILE) {
+			unset($model->data[$model->alias][$this->_field]); // Don't update the field
+			return; // Skip upload, no file was uploaded
+		}
 
 		$auth = new CF_Authentication($settings['username'], $settings['key'], null, $settings['auth_url']);
 		$auth->ssl_use_cabundle();
@@ -113,12 +123,33 @@ class CloudfilesBehavior extends ModelBehavior {
 	 */
 	function checkFileExt($model, $data) {
 		$return = false;
+		if ($model->id !== false && $data[$this->_field]['error'] === UPLOAD_ERR_NO_FILE) {
+			return true; // Editing a model does not require a new upload
+		}
 		foreach ($this->settings[$this->_field]['allowedExt'] as $extension) {
+
 			if (strtolower(substr($data[$this->_field]['name'], -strlen($extension))) == strtolower($extension)) {
 				$return = true;
 			}
 		}
 		return $return;
+	}
+
+	/**
+	 * Check if the file upload was successful
+	 *
+	 * @param Model $model
+	 * @param mixed $data
+	 * @return bool
+	 */
+	function checkUploadError(&$model, $data) {
+		if ($model->id !== false && $data[$this->_field]['error'] === UPLOAD_ERR_NO_FILE) {
+			return true; // Editing a model does not require a new upload
+		}
+		if ($data[$this->_field]['error'] === UPLOAD_ERR_OK) {
+			return true;
+		}
+		return false;
 	}
 
 }
