@@ -20,7 +20,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-App::import('Vendor', 'Cloudfiles.Cloudfiles');
+App::import('Plugin/Cloudfiles/Vendor/Cloudfiles', 'Cloudfiles');
 
 class CloudfilesBehavior extends ModelBehavior {
 
@@ -39,7 +39,7 @@ class CloudfilesBehavior extends ModelBehavior {
 		),
 		'UploadError' => array(
 			'rule' => array('checkUploadError'),
-			'message' => 'Upload failed'
+			'message' => 'Upload failed!'
 		),
 	);
 

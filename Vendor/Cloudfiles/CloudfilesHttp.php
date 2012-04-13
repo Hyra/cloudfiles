@@ -27,7 +27,7 @@
 
 /**
  */
-require_once("cloudfiles_exceptions.php");
+require_once("CloudfilesExceptions.php");
 
 define("PHP_CF_VERSION", "1.7.9");
 define("USER_AGENT", sprintf("PHP-CloudFiles/%s", PHP_CF_VERSION));
