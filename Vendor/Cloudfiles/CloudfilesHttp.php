@@ -216,7 +216,7 @@ class CF_Http
             curl_setopt($curl_ch, CURLOPT_CAINFO, $this->cabundle_path);
         }
         curl_setopt($curl_ch, CURLOPT_VERBOSE, $this->dbug);
-        curl_setopt($curl_ch, CURLOPT_FOLLOWLOCATION, 1);
+        //curl_setopt($curl_ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl_ch, CURLOPT_MAXREDIRS, 4);
         curl_setopt($curl_ch, CURLOPT_HEADER, 0);
         curl_setopt($curl_ch, CURLOPT_HTTPHEADER, $headers);
@@ -1275,7 +1275,7 @@ class CF_Http
             curl_setopt($ch, CURLOPT_CAINFO, $this->cabundle_path);
         }
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, True);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 4);
         curl_setopt($ch, CURLOPT_HEADER, 0);
